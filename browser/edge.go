@@ -17,7 +17,7 @@ import (
 func UpdateMSEdgeConfig() bool {
 	is_running, mainwindow, e := utils.CheckProcessIsRunning("msedge.exe")
 	if e != nil {
-		guilog.Println("发生异常：", e.Error())
+		guilog.Println("异常：", e.Error())
 		return false
 	}
 	if is_running {
@@ -120,6 +120,9 @@ func updateEdgeConfigFile(filepath string) (bool, error) {
 	// update_data_in_map(payload, "safebrowsing.enabled", false)
 	// 增强保护
 	// update_data_in_map(payload, "safebrowsing.enhanced", false)
+
+	// 弹出下载框 Show downloads menu when a download starts
+	updateDataInMap(payload, "browser.show_hub_popup_on_download_start", false)
 
 	// Marshal the updated data into JSON format
 	updatedData, err := json.Marshal(payload)

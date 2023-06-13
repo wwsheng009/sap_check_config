@@ -4,6 +4,7 @@ import (
 	"log"
 	"os/exec"
 	"strings"
+	"syscall"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
@@ -96,6 +97,10 @@ func getMainWindow(ProcessID uint32, windows_class string) windows.HWND {
 }
 func CheckProcessIsInTasklist(process_name string) (bool, error) {
 	cmd := exec.Command("tasklist")
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		HideWindow:    true,
+		CreationFlags: 0x08000000,
+	}
 	output, err := cmd.Output()
 	if err != nil {
 		return false, err
@@ -109,11 +114,24 @@ func CheckProcessIsInTasklist(process_name string) (bool, error) {
 }
 func KillProcess(process_name string) (bool, error) {
 	log.Println("结束进程:", process_name)
-	cmd := exec.Command("taskkill", "/F", "/IM", process_name)
-	err := cmd.Run()
+	ok, err := CheckProcessIsInTasklist(process_name)
 	if err != nil {
 		return false, err
 	}
+	if ok {
+		cmd := exec.Command("taskkill", "/F", "/IM", process_name)
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:    true,
+			CreationFlags: 0x08000000,
+		}
+		err := cmd.Run()
+		if err != nil {
+			return false, err
+		} else {
+			return true, nil
+		}
+	}
+
 	// fmt.Println("Process killed successfully.")
 	return false, nil
 }

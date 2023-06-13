@@ -33,7 +33,7 @@ func AddDirectory(directory string) {
 	directory_sap = strings.ReplaceAll(directory_sap, "//", "/")
 	if _, ok := download_location[directory_sap]; !ok {
 		download_location[directory_sap] = directory_sap
-		log.Println("增加目录:" + directory_sap)
+		log.Println("下载目录:" + directory_sap)
 	}
 
 }
@@ -50,7 +50,6 @@ func CheckBrowser() (bool, error) {
 
 	default_browser, err := getDefaultBrowser()
 	if err == nil {
-
 		browser_name := default_browser + "-不支持"
 		if default_browser == "ChromeHTML" {
 			browser_name = "谷歌浏览器"
@@ -67,6 +66,7 @@ func CheckBrowser() (bool, error) {
 		}
 		guilog.Println("默认浏览器：", browser_name)
 	} else {
+		guilog.Println("无法获取系统默认浏览器")
 		log.Println(err)
 	}
 
@@ -75,9 +75,9 @@ func CheckBrowser() (bool, error) {
 	if checkChromeInstallLocation() != "" {
 		ok := UpdateChromeConfig()
 		if ok {
-			guilog.Println("更新成功")
+			guilog.Println("配置成功")
 		} else {
-			guilog.Println("更新失败")
+			guilog.Println("配置失败")
 		}
 	} else {
 		guilog.Println("没找到")
@@ -89,9 +89,9 @@ func CheckBrowser() (bool, error) {
 	if checkEdgeInstallLocation() != "" {
 		ok := UpdateMSEdgeConfig()
 		if ok {
-			guilog.Println("更新成功")
+			guilog.Println("配置成功")
 		} else {
-			guilog.Println("更新失败")
+			guilog.Println("配置失败")
 		}
 	} else {
 		guilog.Println("没找到")
@@ -102,9 +102,9 @@ func CheckBrowser() (bool, error) {
 	if checkFireFoxInstallLocation() != "" {
 		ok := UpdateFireFoxConfig()
 		if ok {
-			guilog.Println("更新成功")
+			guilog.Println("配置成功")
 		} else {
-			guilog.Println("更新失败")
+			guilog.Println("配置失败")
 		}
 	} else {
 		guilog.Println("没找到")
@@ -148,6 +148,7 @@ func getDataInMap(data map[string]interface{}, path string) (interface{}, bool) 
 		}
 		data, ok = value.(map[string]interface{})
 		if !ok {
+			log.Println("读取配置:" + path + fmt.Sprintf("==>%v", value))
 			return value, true
 		}
 	}
@@ -157,11 +158,15 @@ func updateDataInMap(data map[string]interface{}, key string, val interface{}) m
 	if key == "" {
 		return data
 	}
+	log.Println("更新配置:" + key + fmt.Sprintf("==>%v", val))
 	// Find the key or path to update
 	path := key //"person.address.city"
 	keys := strings.Split(path, ".")
 	var current interface{} = data
 	for i, key := range keys {
+		if current == nil {
+			continue
+		}
 		if i == len(keys)-1 {
 			// Update the value at the specified key
 			current.(map[string]interface{})[key] = val

@@ -17,7 +17,7 @@ import (
 func UpdateFireFoxConfig() bool {
 	is_running, mainwindow, e := utils.CheckProcessIsRunning("firefox.exe")
 	if e != nil {
-		log.Println("检查火狐浏览器发生异常：", e.Error())
+		log.Println("配置火狐浏览器异常：", e.Error())
 		return false
 	}
 	if is_running {
@@ -195,6 +195,8 @@ func getFireFoxConfig(firefoxConfigPath string, configKey string) (string, error
 			break
 		}
 	}
+	log.Println("读取配置:" + configKey + fmt.Sprintf("==>%v", configValue))
+
 	return configValue, nil
 }
 
@@ -202,7 +204,7 @@ func updateFireFoxConfig(firefoxConfigPath string, configKey string, configValue
 	if configKey == "" {
 		return false, errors.New("不能配置空值")
 	}
-	log.Println("更新配置:" + configKey + fmt.Sprintf(":%v", configValue))
+	log.Println("更新配置:" + configKey + fmt.Sprintf("==>%v", configValue))
 
 	// Open the prefs.js file for writing
 	file, err := os.OpenFile(firefoxConfigPath, os.O_CREATE, 0644)

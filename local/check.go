@@ -27,11 +27,11 @@ func CheckOS() (bool, error) {
 	}
 	addrs, err := net.InterfaceAddrs()
 	if err == nil {
-		guilog.Println("IP地址：")
+		log.Println("IP地址：")
 		for _, addr := range addrs {
 			// check if the IP address is not a loopback and is IPv4
 			if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
-				guilog.Println(ipnet.IP.String())
+				log.Println(ipnet.IP.String())
 			}
 		}
 	}
@@ -44,22 +44,18 @@ func CheckOS() (bool, error) {
 			return false, err
 		}
 		defer k.Close()
-		maj, _, err := k.GetStringValue("EditionID")
-		if err != nil {
-			return false, err
-		}
-		pn, _, err := k.GetStringValue("ProductName")
-		if err != nil {
-			return false, err
+
+		pn, _, _ := k.GetStringValue("ProductName")
+
+		maj, _, _ := k.GetStringValue("EditionID")
+		if maj != "" {
+			maj = fmt.Sprintf(" [%s]", maj)
 		}
 		cv, _, _ := k.GetStringValue("DisplayVersion")
-		// if err == nil {
-		// 	guilog.Println(fmt.Sprintf("版本: %s", cv))
-		// }
-
-		guilog.Println(fmt.Sprintf("操作系统版本: %s [%s] [%s]", pn, maj, cv))
-		// guilog.Println(fmt.Sprintf("版本: %s", maj))
-
+		if cv != "" {
+			cv = fmt.Sprintf(" [%s]", cv)
+		}
+		guilog.Println(fmt.Sprintf("操作系统版本: %s%s%s", pn, maj, cv))
 	}
 
 	return true, nil

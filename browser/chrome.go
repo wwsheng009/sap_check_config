@@ -17,7 +17,7 @@ func UpdateChromeConfig() bool {
 
 	is_running, mainwindow, err := utils.CheckProcessIsRunning("chrome.exe")
 	if err != nil {
-		guilog.Println("检查谷歌浏览器发生异常：", err.Error())
+		guilog.Println("配置谷歌浏览器异常：", err.Error())
 		return false
 	}
 	if is_running {
@@ -113,6 +113,10 @@ func updateChromeConfig(filepath string) (bool, error) {
 	// 增强保护
 	log.Println("关闭选项：增强型保护")
 	updateDataInMap(payload, "safebrowsing.enhanced", false)
+
+	//关闭选项：下载完成后显示下载内容
+	log.Println("关闭选项：下载完成后显示下载内容")
+	updateDataInMap(payload, "download_bubble.partial_view_enabled", false)
 
 	// Marshal the updated data into JSON format
 	updatedData, err := json.Marshal(payload)
