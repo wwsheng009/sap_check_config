@@ -33,7 +33,7 @@ jobs:
         run: Compress-Archive -Path SAP环境自动配置_admin.exe -DestinationPath SAP环境自动配置_admin.zip
 
       - name: Upload artifact (admin)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SAP环境自动配置_admin
           path: SAP环境自动配置_admin.zip
@@ -49,7 +49,7 @@ jobs:
         run: Compress-Archive -Path SAP环境自动配置.exe -DestinationPath SAP环境自动配置.zip
 
       - name: Upload artifact (normal)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SAP环境自动配置
           path: SAP环境自动配置.zip
