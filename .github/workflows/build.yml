@@ -42,3 +42,12 @@ jobs:
         with:
           name: SAP环境自动配置
           path: SAP环境自动配置.zip
+
+      - name: Upload Release Asset
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./SAP环境自动配置.zip
+          asset_name: SAP环境自动配置.zip
+          asset_content_type: application/zip
