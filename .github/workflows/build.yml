@@ -22,12 +22,15 @@ jobs:
       - name: Install rsrc
         run: go install github.com/akavel/rsrc@latest
 
+      - name: Delete all syso files
+        run: Remove-Item -Path *.syso -Force -ErrorAction SilentlyContinue
+
       - name: Generate syso file (admin)
         run: |
           rsrc -manifest .\main_admin.exe.manifest -ico .\assets\main.ico -o SAP环境自动配置_admin.syso
 
       - name: Build EXE (admin)
-        run: go build -ldflags="-s -w -H windowsgui" -o SAP环境自动配置_admin.exe -trimpath -v -x -mod=readonly -modcacherw -buildmode=exe -gcflags=all="-N -l" -tags=admin
+        run: go build -ldflags="-s -w -H windowsgui" -o SAP环境自动配置_admin.exe
 
       - name: Archive EXE to zip (admin)
         run: Compress-Archive -Path SAP环境自动配置_admin.exe -DestinationPath SAP环境自动配置_admin.zip

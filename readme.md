@@ -28,5 +28,5 @@ rsrc -manifest .\main.exe.manifest -ico ./assets/main.ico -o SAP环境自动配�
 
 # 要求管理员
 rsrc -manifest .\main_admin.exe.manifest -ico ./assets/main.ico -o SAP环境自动配置.syso
-go build -ldflags="-s -w -H windowsgui" -o SAP环境自动配置.exe
+go build -ldflags="-H windowsgui" -o SAP环境自动配置.exe
 ```
